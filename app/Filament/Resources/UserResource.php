@@ -11,7 +11,9 @@ use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
+use Illuminate\Auth\Access\Response;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 
 class UserResource extends Resource
@@ -26,21 +28,25 @@ class UserResource extends Resource
             ->schema([
                 Forms\Components\TextInput::make('name')
                     ->required(),
+                Forms\Components\TextInput::make('surname')
+                    ->required(),
                 Forms\Components\TextInput::make('email')
+                    ->required(),
+                Forms\Components\Select::make('role_id')
+                    ->label('Role')
+                    ->options(Role::all()->pluck('name', 'id'))
                     ->required(),
                 Forms\Components\TextInput::make('password')
                     ->password()
                     ->required()
+                    ->autocomplete('new-password')
                     ->label('Password'),
                 Forms\Components\TextInput::make('password_confirmation')
                     ->password()
                     ->required()
                     ->label('Repeat Password')
-                    ->same('password'),
-                Forms\Components\Select::make('role_id')
-                    ->label('Role')
-                    ->options(Role::all()->pluck('name', 'id'))
-                    ->required(),
+                    ->autocomplete('new-password')
+                    ->same('password')
             ]);
     }
 
@@ -55,6 +61,7 @@ class UserResource extends Resource
                     })
                     ->searchable(),
                 Tables\Columns\TextColumn::make('name')->searchable(),
+                Tables\Columns\TextColumn::make('surname')->searchable(),
                 Tables\Columns\TextColumn::make('email')->searchable(),
                 Tables\Columns\TextColumn::make('role')
                     ->getStateUsing(function(User $record) {

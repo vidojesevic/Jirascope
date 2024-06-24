@@ -22,6 +22,7 @@ class User extends Authenticatable implements FilamentUser
      */
     protected $fillable = [
         'name',
+        'surname',
         'email',
         'password',
         'role_id'
@@ -60,6 +61,47 @@ class User extends Authenticatable implements FilamentUser
         return $this->belongsTo(Role::class);
     }
 
+    /**
+     * @param $role
+     * @return bool
+     */
+    public function hasRole($role): bool
+    {
+        return $this->role()->where('name', $role)->exists();
+    }
+
+    /**
+     * @return bool
+     */
+    public function isAdmin(): bool
+    {
+        return $this->hasRole('admin');
+    }
+
+    /**
+     * @return bool
+     */
+    public function isDeveloper(): bool
+    {
+        return $this->hasRole('developer');
+    }
+
+    /**
+     * @return bool
+     */
+    public function isManager(): bool
+    {
+        return $this->hasRole('project manager');
+    }
+
+    /**
+     * @return bool
+     */
+    public function isRegularUser(): bool
+    {
+        return $this->hasRole('user');
+    }
+
     public function scopeWithRoles($query, $roles)
     {
         return $query->whereHas('role', function ($q) use ($roles) {
@@ -69,6 +111,6 @@ class User extends Authenticatable implements FilamentUser
 
     public function canAccessPanel(Panel $panel): bool
     {
-        return str_ends_with($this->email, '@example.test') && $this->hasVerifiedEmail() && $this->role()->pluck('name')->contains('admin');
+        return str_ends_with($this->email, '@example.test') && $this->hasVerifiedEmail() && $this->isAdmin() || $this->isDeveloper() || $this->isManager();
     }
 }
