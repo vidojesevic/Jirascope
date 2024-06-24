@@ -60,6 +60,13 @@ class User extends Authenticatable implements FilamentUser
         return $this->belongsTo(Role::class);
     }
 
+    public function scopeWithRoles($query, $roles)
+    {
+        return $query->whereHas('role', function ($q) use ($roles) {
+            $q->whereIn('name', (array) $roles);
+        });
+    }
+
     public function canAccessPanel(Panel $panel): bool
     {
         return str_ends_with($this->email, '@example.test') && $this->hasVerifiedEmail() && $this->role()->pluck('name')->contains('admin');

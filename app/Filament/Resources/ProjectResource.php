@@ -4,7 +4,9 @@ namespace App\Filament\Resources;
 
 use App\Filament\Resources\ProjectResource\Pages;
 use App\Filament\Resources\ProjectResource\RelationManagers;
+use App\Models\Client;
 use App\Models\Project;
+use App\Models\Team;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
@@ -24,8 +26,10 @@ class ProjectResource extends Resource
         return $form
             ->schema([
                 Forms\Components\TextInput::make('name'),
-                Forms\Components\Select::make('client')
-                ->preload(),
+                Forms\Components\Select::make('client_id')
+                    ->label('Client')
+                    ->relationship('client', 'name')
+                    ->preload(),
                 Forms\Components\Textarea::make('description'),
                 Forms\Components\Select::make('teams')
                     ->multiple()
@@ -39,8 +43,16 @@ class ProjectResource extends Resource
         return $table
             ->columns([
                 Tables\Columns\TextColumn::make('name')->searchable(),
+                Tables\Columns\TextColumn::make('client')
+                    ->getStateUsing(function (Project $project) {
+                        return $project->client()->pluck('name');
+                    })
+                    ->searchable(),
+                Tables\Columns\TextColumn::make('team')
+                ->getStateUsing(function (Project $project) {
+                    return $project->teams()->pluck('name');
+                }),
                 Tables\Columns\TextColumn::make('description'),
-                Tables\Columns\TextColumn::make('client'),
             ])
             ->filters([
                 //

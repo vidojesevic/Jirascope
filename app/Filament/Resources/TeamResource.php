@@ -5,6 +5,7 @@ namespace App\Filament\Resources;
 use App\Filament\Resources\TeamResource\Pages;
 use App\Filament\Resources\TeamResource\RelationManagers;
 use App\Models\Team;
+use App\Models\User;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
@@ -35,6 +36,9 @@ class TeamResource extends Resource
                 Forms\Components\Select::make('users')
                     ->multiple()
                     ->relationship('users', 'name')
+                    ->options(function (User $user) {
+                        return User::withRoles(['developer', 'project manager'])->pluck('name', 'id');
+                    })
                     ->preload()
             ]);
     }
