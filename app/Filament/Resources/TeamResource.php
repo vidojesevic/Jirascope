@@ -36,7 +36,6 @@ class TeamResource extends Resource
                     ->multiple()
                     ->relationship('users', 'name')
                     ->preload()
-                    ->required(),
             ]);
     }
 

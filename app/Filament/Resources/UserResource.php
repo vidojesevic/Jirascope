@@ -24,8 +24,10 @@ class UserResource extends Resource
     {
         return $form
             ->schema([
-                Forms\Components\TextInput::make('name')->required(),
-                Forms\Components\TextInput::make('email')->required(),
+                Forms\Components\TextInput::make('name')
+                    ->required(),
+                Forms\Components\TextInput::make('email')
+                    ->required(),
                 Forms\Components\TextInput::make('password')
                     ->password()
                     ->required()
@@ -34,7 +36,11 @@ class UserResource extends Resource
                     ->password()
                     ->required()
                     ->label('Repeat Password')
-                    ->same('password')
+                    ->same('password'),
+                Forms\Components\Select::make('role_id')
+                    ->label('Role')
+                    ->options(Role::all()->pluck('name', 'id'))
+                    ->required(),
             ]);
     }
 

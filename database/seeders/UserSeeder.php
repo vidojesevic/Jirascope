@@ -14,8 +14,8 @@ class UserSeeder extends Seeder
     public function run(): void
     {
         DB::table('users')->insert([
-            'name' => 'Vidoje Sevic',
-            'email' => 'vidoje@filisha.test',
+            'name' => 'Milan Petrovic',
+            'email' => 'milan@example.test',
             'password' => bcrypt('password123'),
             'role_id' => 2,
             'created_at' => now(),
@@ -23,8 +23,8 @@ class UserSeeder extends Seeder
         ]);
 
         DB::table('users')->insert([
-            'name' => 'Jelena Sevic',
-            'email' => 'jelena@filisha.test',
+            'name' => 'Janko Popovic',
+            'email' => 'janko@example.test',
             'password' => bcrypt('password123'),
             'role_id' => 1,
             'created_at' => now(),

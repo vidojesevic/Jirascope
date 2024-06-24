@@ -24,7 +24,7 @@ class User extends Authenticatable implements FilamentUser
         'name',
         'email',
         'password',
-        'role'
+        'role_id'
     ];
 
     /**
@@ -62,6 +62,6 @@ class User extends Authenticatable implements FilamentUser
 
     public function canAccessPanel(Panel $panel): bool
     {
-        return str_ends_with($this->email, '@filisha.test') && $this->hasVerifiedEmail() && $this->role()->pluck('name')->contains('admin');
+        return str_ends_with($this->email, '@example.test') && $this->hasVerifiedEmail() && $this->role()->pluck('name')->contains('admin');
     }
 }
