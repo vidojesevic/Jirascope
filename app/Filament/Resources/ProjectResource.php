@@ -32,10 +32,16 @@ class ProjectResource extends Resource
                     ->preload()
                     ->required(),
                 Forms\Components\TextInput::make('git_repository'),
-                Forms\Components\Select::make('teams')
-                    ->multiple()
-                    ->relationship('teams', 'name')
-                    ->preload(),
+                Forms\Components\Select::make('status')
+                    ->default('To do')
+                    ->options([
+                        'To do' => 'To do',
+                        'In progress' => 'In progress',
+                        'Code review' => 'Code review',
+                        'Internal testing' => 'Internal testing',
+                        'Done' => 'Done'
+                    ])
+                    ->native(false),
                 Forms\Components\Textarea::make('description')
                     ->rows(5),
                 Forms\Components\FileUpload::make('project_image')
@@ -61,7 +67,7 @@ class ProjectResource extends Resource
                     ->searchable(),
                 Tables\Columns\TextColumn::make('team')
                 ->getStateUsing(function (Project $project) {
-                    return $project->teams()->pluck('name');
+                    return $project->team()->pluck('name');
                 }),
                 Tables\Columns\TextColumn::make('description')->limit(50),
             ])

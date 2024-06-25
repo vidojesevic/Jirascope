@@ -57,7 +57,7 @@ class UserResource extends Resource
                 Tables\Columns\TextColumn::make('team')
                     ->label('Teams')
                     ->getStateUsing(function (User $record) {
-                        return $record->teams->pluck('name')->join(', ');
+                        return $record->team()->pluck('name')->join(', ');
                     })
                     ->searchable(),
                 Tables\Columns\TextColumn::make('name')->searchable(),
