@@ -64,8 +64,13 @@ class TaskResource extends Resource
                         return $task->project()->pluck('name');
                     }),
                 Tables\Columns\TextColumn::make('name'),
-                Tables\Columns\TextColumn::make('status'),
                 Tables\Columns\TextColumn::make('git_branch'),
+                Tables\Columns\TextColumn::make('status'),
+                Tables\Columns\TextColumn::make('start_date'),
+                Tables\Columns\TextColumn::make('end_date'),
+                Tables\Columns\TextColumn::make('user_id')
+                    ->label('User')
+                    ->formatStateUsing(fn (Task $task) => $task->user()->pluck('name')[0]),
             ])
             ->filters([
                 //
