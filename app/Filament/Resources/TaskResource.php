@@ -4,7 +4,10 @@ namespace App\Filament\Resources;
 
 use App\Filament\Resources\TaskResource\Pages;
 use App\Filament\Resources\TaskResource\RelationManagers;
+use App\Models\Project;
 use App\Models\Task;
+use App\Models\User;
+use Filament\Facades\Filament;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
@@ -45,7 +48,9 @@ class TaskResource extends Resource
                     ->required()
                     ->type('date'),
                 Forms\Components\Textarea::make('description'),
-                Forms\Components\FileUpload::make('images')
+                Forms\Components\Select::make('user_id')
+                    ->relationship('user', 'name'),
+                Forms\Components\FileUpload::make('task_image')
             ]);
     }
 
@@ -53,7 +58,14 @@ class TaskResource extends Resource
     {
         return $table
             ->columns([
+                Tables\Columns\TextColumn::make('project_id')
+                    ->label('Project')
+                    ->getStateUsing(function (Task $task) {
+                        return $task->project()->pluck('name');
+                    }),
                 Tables\Columns\TextColumn::make('name'),
+                Tables\Columns\TextColumn::make('status'),
+                Tables\Columns\TextColumn::make('git_branch'),
             ])
             ->filters([
                 //

@@ -5,6 +5,7 @@ namespace App\Filament\Resources;
 use App\Filament\Resources\ProjectResource\Pages;
 use App\Filament\Resources\ProjectResource\RelationManagers;
 use App\Models\Project;
+use Filament\Facades\Filament;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
@@ -12,6 +13,7 @@ use Filament\Tables;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
+use Illuminate\Support\Facades\Storage;
 
 class ProjectResource extends Resource
 {
@@ -32,16 +34,9 @@ class ProjectResource extends Resource
                     ->preload()
                     ->required(),
                 Forms\Components\TextInput::make('git_repository'),
-                Forms\Components\Select::make('status')
-                    ->default('To do')
-                    ->options([
-                        'To do' => 'To do',
-                        'In progress' => 'In progress',
-                        'Code review' => 'Code review',
-                        'Internal testing' => 'Internal testing',
-                        'Done' => 'Done'
-                    ])
-                    ->native(false),
+                Forms\Components\TextInput::make('end_date')
+                    ->required()
+                    ->type('date'),
                 Forms\Components\Textarea::make('description')
                     ->rows(5),
                 Forms\Components\FileUpload::make('project_image')
@@ -54,10 +49,10 @@ class ProjectResource extends Resource
         return $table
             ->columns([
                 Tables\Columns\ImageColumn::make('project_image')
-                    ->label('Project image')
-                    ->defaultImageUrl(function (Project $project): string {
-                        return '/storage/' . $project->project_image;
-                    }),
+                    ->label('Project image'),
+//                    ->defaultImageUrl(function (Project $project): string {
+//                        return storage_path($project->project_image);
+//                    }),
                 Tables\Columns\TextColumn::make('name')->searchable(),
                 Tables\Columns\TextColumn::make('git_repository'),
                 Tables\Columns\TextColumn::make('client')
