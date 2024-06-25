@@ -17,6 +17,7 @@ class Client extends Model
         'country',
         'phone',
         'city',
+        'team_id'
     ];
 
     public function projects(): HasMany
