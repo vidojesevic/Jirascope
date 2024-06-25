@@ -11,15 +11,14 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('clients', function (Blueprint $table) {
+        Schema::create('tasks', function (Blueprint $table) {
             $table->id();
             $table->string('name');
             $table->longText('description');
-            $table->string('street');
-            $table->string('number');
-            $table->string('country');
-            $table->string('city');
-            $table->string('phone');
+            $table->date('start_date');
+            $table->date('end_date');
+            $table->enum('status', ['To do', 'In progress', 'Code review', 'Internal testing', 'Done'])->default('To do');
+            $table->string('git_branch');
             $table->timestamps();
         });
     }
@@ -29,6 +28,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('clients');
+        Schema::dropIfExists('tasks');
     }
 };

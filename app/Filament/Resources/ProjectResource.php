@@ -4,9 +4,7 @@ namespace App\Filament\Resources;
 
 use App\Filament\Resources\ProjectResource\Pages;
 use App\Filament\Resources\ProjectResource\RelationManagers;
-use App\Models\Client;
 use App\Models\Project;
-use App\Models\Team;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
@@ -17,6 +15,7 @@ use Illuminate\Database\Eloquent\SoftDeletingScope;
 
 class ProjectResource extends Resource
 {
+
     protected static ?string $model = Project::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
@@ -25,16 +24,22 @@ class ProjectResource extends Resource
     {
         return $form
             ->schema([
-                Forms\Components\TextInput::make('name'),
+                Forms\Components\TextInput::make('name')
+                    ->required(),
                 Forms\Components\Select::make('client_id')
                     ->label('Client')
                     ->relationship('client', 'name')
-                    ->preload(),
-                Forms\Components\Textarea::make('description'),
+                    ->preload()
+                    ->required(),
+                Forms\Components\TextInput::make('git_repository'),
                 Forms\Components\Select::make('teams')
                     ->multiple()
                     ->relationship('teams', 'name')
-                    ->preload()
+                    ->preload(),
+                Forms\Components\Textarea::make('description')
+                    ->rows(5),
+                Forms\Components\FileUpload::make('project_image')
+                    ->directory('project-image')
             ]);
     }
 
@@ -42,6 +47,11 @@ class ProjectResource extends Resource
     {
         return $table
             ->columns([
+                Tables\Columns\ImageColumn::make('project_image')
+                    ->label('Project image')
+                    ->defaultImageUrl(function (Project $project): string {
+                        return '/storage/' . $project->project_image;
+                    }),
                 Tables\Columns\TextColumn::make('name')->searchable(),
                 Tables\Columns\TextColumn::make('client')
                     ->getStateUsing(function (Project $project) {
@@ -52,7 +62,7 @@ class ProjectResource extends Resource
                 ->getStateUsing(function (Project $project) {
                     return $project->teams()->pluck('name');
                 }),
-                Tables\Columns\TextColumn::make('description'),
+                Tables\Columns\TextColumn::make('description')->limit(50),
             ])
             ->filters([
                 //

@@ -37,7 +37,12 @@ class TeamResource extends Resource
                     ->multiple()
                     ->relationship('users', 'name')
                     ->options(function (User $user) {
-                        return User::withRoles(['developer', 'project manager'])->pluck('name', 'id');
+                        return User::withRoles(['developer', 'project manager'])
+                            ->get()
+                            ->mapWithKeys(function ($user) {
+                                return [$user->id => $user->fullName()];
+                            })
+                            ->toArray();
                     })
                     ->preload()
             ]);

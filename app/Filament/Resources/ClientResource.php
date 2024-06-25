@@ -30,6 +30,7 @@ class ClientResource extends Resource
                 Forms\Components\TextInput::make('number')->required(),
                 Forms\Components\TextInput::make('phone')->required(),
                 Forms\Components\Textarea::make('description')
+                    ->rows(5)
             ]);
     }
 
@@ -43,7 +44,8 @@ class ClientResource extends Resource
                 Tables\Columns\TextColumn::make('street'),
                 Tables\Columns\TextColumn::make('number'),
                 Tables\Columns\TextColumn::make('phone'),
-                Tables\Columns\TextColumn::make('description'),
+                Tables\Columns\TextColumn::make('description')
+                    ->limit(50),
             ])
             ->filters([
                 //
