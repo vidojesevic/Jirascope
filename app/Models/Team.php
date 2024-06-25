@@ -10,16 +10,26 @@ class Team extends Model
     protected $fillable = [
         'name',
         'description',
-        'rate'
+        'slug'
     ];
 
     public function users(): BelongsToMany
     {
-        return $this->belongsToMany(User::class, 'team_user', 'team_id', 'user_id');
+        return $this->belongsToMany(User::class); //, 'team_user', 'user_id', 'team_id');
     }
 
     public function projects(): BelongsToMany
     {
-        return $thin->belongsToMany(Project::class, 'project_team', 'team_id', 'project_id');
+        return $this->belongsToMany(Project::class, 'project_team', 'team_id', 'project_id');
+    }
+
+    public function members(): BelongsToMany
+    {
+        return $this->belongsToMany(User::class);
+    }
+
+    public function roles(): BelongsToMany
+    {
+        return $this->belongsToMany(Role::class);
     }
 }

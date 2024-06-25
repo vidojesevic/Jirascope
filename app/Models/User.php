@@ -4,14 +4,17 @@ namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Filament\Models\Contracts\FilamentUser;
+use Filament\Models\Contracts\HasTenants;
 use Filament\Panel;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Support\Collection;
 
-class User extends Authenticatable implements FilamentUser
+class User extends Authenticatable implements FilamentUser, HasTenants
 {
     use HasFactory, Notifiable;
 
@@ -59,11 +62,6 @@ class User extends Authenticatable implements FilamentUser
     public function fullName(): string
     {
         return $this->name . ' ' . $this->surname;
-    }
-
-    public function teams(): BelongsToMany
-    {
-        return $this->belongsToMany(Team::class, 'team_user', 'user_id', 'team_id');
     }
 
     public function role(): BelongsTo
@@ -121,6 +119,23 @@ class User extends Authenticatable implements FilamentUser
 
     public function canAccessPanel(Panel $panel): bool
     {
-        return str_ends_with($this->email, '@example.test') && $this->hasVerifiedEmail() && $this->isAdmin() || $this->isDeveloper() || $this->isManager();
+//        return str_ends_with($this->email, '@example.test') && $this->hasVerifiedEmail();
+        return true;
+//        && $this->isAdmin() || $this->isDeveloper() || $this->isManager();
+    }
+
+    public function teams(): BelongsToMany
+    {
+        return $this->belongsToMany(Team::class);
+    }
+
+    public function getTenants(Panel $panel): array|Collection
+    {
+        return $this->teams;
+    }
+
+    public function canAccessTenant(Model $tenant): bool
+    {
+        return $this->teams()->whereKey($tenant)->exists();
     }
 }

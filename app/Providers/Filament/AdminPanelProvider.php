@@ -2,7 +2,9 @@
 
 namespace App\Providers\Filament;
 
-use App\Http\Middleware\CheckAdminAccess;
+use App\Filament\Pages\Tenancy\EditTeamProfile;
+use App\Filament\Pages\Tenancy\RegisterTeam;
+use App\Models\Team;
 use Filament\Http\Middleware\Authenticate;
 use Filament\Http\Middleware\DisableBladeIconComponents;
 use Filament\Http\Middleware\DispatchServingFilamentEvent;
@@ -28,9 +30,8 @@ class AdminPanelProvider extends PanelProvider
             ->id('admin')
             ->path('admin')
             ->login()
-            ->colors([
-                'primary' => Color::Slate,
-            ])
+            ->colors(['primary' => Color::Slate])
+            ->unsavedChangesAlerts()
             ->font('Ubuntu')
             ->discoverResources(in: app_path('Filament/Resources'), for: 'App\\Filament\\Resources')
             ->discoverPages(in: app_path('Filament/Pages'), for: 'App\\Filament\\Pages')
@@ -55,6 +56,9 @@ class AdminPanelProvider extends PanelProvider
             ])
             ->authMiddleware([
                 Authenticate::class,
-            ]);
+            ])
+            ->tenant(Team::class)
+            ->tenantRegistration(RegisterTeam::class)
+            ->tenantProfile(EditTeamProfile::class);
     }
 }

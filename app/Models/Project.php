@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
-
+use Illuminate\Database\Eloquent\Builder;
 class Project extends Model
 {
     /**
@@ -30,7 +30,7 @@ class Project extends Model
      *
      * @return BelongsToMany
      */
-    public function teams(): BelongsToMany
+    public function team(): BelongsToMany
     {
         return $this->belongsToMany(Team::class, 'project_team', 'project_id', 'team_id');
     }
@@ -47,4 +47,13 @@ class Project extends Model
     {
         return $this->hasMany(Task::class);
     }
+
+//    protected static function booted(): void
+//    {
+//        static::addGlobalScope('team', function (Builder $query) {
+//            if (auth()->hasUser()) {
+//                $query->where('team_id', auth()->user()->teams()->pluck('id'));
+//            }
+//        });
+//    }
 }

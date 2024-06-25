@@ -11,8 +11,9 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('images', function (Blueprint $table) {
-            $table->enum('image_type', ['project', 'task']);
+        Schema::table('clients', function (Blueprint $table) {
+            $table->unsignedBigInteger('team_id');
+            $table->foreign('team_id')->references('id')->on('teams')->onDelete('cascade');
         });
     }
 
@@ -21,6 +22,7 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('images');
+        Schema::table('clients', function (Blueprint $table) {
+        });
     }
 };

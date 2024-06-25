@@ -19,6 +19,8 @@ return new class extends Migration
             $table->date('end_date');
             $table->enum('status', ['To do', 'In progress', 'Code review', 'Internal testing', 'Done'])->default('To do');
             $table->string('git_branch');
+            $table->unsignedBigInteger('user_id')->nullable();
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
             $table->timestamps();
         });
     }

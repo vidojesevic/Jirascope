@@ -17,4 +17,12 @@ export default defineConfig({
             },
         }),
     ],
+    // server: {
+    //     host: '127.0.0.1',
+    //     port: 8000,
+    //     hmr: {
+    //         host: 'filisha.test',
+    //         port: 8000
+    //     }
+    // }
 });

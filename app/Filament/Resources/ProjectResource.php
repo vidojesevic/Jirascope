@@ -53,6 +53,7 @@ class ProjectResource extends Resource
                         return '/storage/' . $project->project_image;
                     }),
                 Tables\Columns\TextColumn::make('name')->searchable(),
+                Tables\Columns\TextColumn::make('git_repository'),
                 Tables\Columns\TextColumn::make('client')
                     ->getStateUsing(function (Project $project) {
                         return $project->client()->pluck('name');

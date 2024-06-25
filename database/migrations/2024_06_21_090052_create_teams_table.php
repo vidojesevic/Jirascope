@@ -14,8 +14,9 @@ return new class extends Migration
         Schema::create('teams', function (Blueprint $table) {
             $table->id();
             $table->string('name');
-            $table->string('description');
-            $table->enum('rate', [1,2,3,4,5]);
+            $table->string('slug');
+            $table->longText('description')->nullable();
+            $table->enum('rate', [1,2,3,4,5])->default(1);
             $table->timestamps();
         });
     }
