@@ -13,7 +13,7 @@ class TaskPolicy
      */
     public function viewAny(User $user): bool
     {
-        return $this->rejectUser($user);
+        return $this->rejectRegularUser($user);
     }
 
     /**
@@ -21,7 +21,7 @@ class TaskPolicy
      */
     public function view(User $user, Task $task): bool
     {
-        return $this->rejectUser($user);
+        return $this->rejectRegularUser($user);
     }
 
     /**
@@ -37,7 +37,7 @@ class TaskPolicy
      */
     public function update(User $user, Task $task): bool
     {
-        return $this->rejectUser($user);
+        return $user->id == $task->user_id;
     }
 
     /**
@@ -97,7 +97,7 @@ class TaskPolicy
         return false;
     }
 
-    protected function rejectUser(User $user): bool
+    protected function rejectRegularUser(User $user): bool
     {
         if ($user->isRegularUser()) {
             return false;
