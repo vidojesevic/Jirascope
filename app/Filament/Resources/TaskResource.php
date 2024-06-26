@@ -4,10 +4,8 @@ namespace App\Filament\Resources;
 
 use App\Filament\Resources\TaskResource\Pages;
 use App\Filament\Resources\TaskResource\RelationManagers;
-use App\Models\Project;
 use App\Models\Task;
 use App\Models\User;
-use Filament\Facades\Filament;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
@@ -49,6 +47,10 @@ class TaskResource extends Resource
                     ->type('date'),
                 Forms\Components\Textarea::make('description'),
                 Forms\Components\Select::make('user_id')
+                    ->options(function () {
+                        $user = auth()->user();
+                        return User::where('team_id', auth()->user()->teams)->pluck('name', 'id');
+                    })
                     ->relationship('user', 'name'),
                 Forms\Components\FileUpload::make('task_image')
             ]);
@@ -58,6 +60,14 @@ class TaskResource extends Resource
     {
         return $table
             ->columns([
+                Tables\Columns\TextColumn::make('status')
+                    ->colors([
+                        'primary' => 'To do',
+                        'warning' => 'In progress',
+                        'info' => 'Code review',
+                        'success' => 'Internal testing',
+                        'success' => 'Done',
+                    ]),
                 Tables\Columns\TextColumn::make('project_id')
                     ->label('Project')
                     ->getStateUsing(function (Task $task) {
@@ -65,7 +75,6 @@ class TaskResource extends Resource
                     }),
                 Tables\Columns\TextColumn::make('name'),
                 Tables\Columns\TextColumn::make('git_branch'),
-                Tables\Columns\TextColumn::make('status'),
                 Tables\Columns\TextColumn::make('start_date'),
                 Tables\Columns\TextColumn::make('end_date'),
                 Tables\Columns\TextColumn::make('user_id')
