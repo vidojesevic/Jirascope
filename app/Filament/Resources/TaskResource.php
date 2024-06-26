@@ -71,6 +71,7 @@ class TaskResource extends Resource
         return $table
             ->columns([
                 Tables\Columns\TextColumn::make('status')
+                    ->icon('heroicon-s-clipboard-document-check')
                     ->colors([
                         'primary' => 'To do',
                         'warning' => 'In progress',

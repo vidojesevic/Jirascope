@@ -4,16 +4,13 @@ namespace App\Filament\Resources;
 
 use App\Filament\Resources\ProjectResource\Pages;
 use App\Filament\Resources\ProjectResource\RelationManagers;
+use App\Models\Client;
 use App\Models\Project;
-use Filament\Facades\Filament;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\SoftDeletingScope;
-use Illuminate\Support\Facades\Storage;
 
 class ProjectResource extends Resource
 {
@@ -32,8 +29,13 @@ class ProjectResource extends Resource
                     ->required(),
                 Forms\Components\Select::make('client_id')
                     ->label('Client')
-                    ->relationship('client', 'name')
-                    ->preload()
+                    ->options(function () {
+                        $currentUser = auth()->user();
+                        $teamIds = $currentUser->team->pluck('id');
+                        return Client::whereHas('team', function ($query) use ($teamIds) {
+                            $query->whereIn('teams.id', $teamIds);
+                        })->get()->pluck('name', 'id');
+                    })
                     ->required(),
                 Forms\Components\TextInput::make('git_repository'),
                 Forms\Components\TextInput::make('end_date')
@@ -52,9 +54,6 @@ class ProjectResource extends Resource
             ->columns([
                 Tables\Columns\ImageColumn::make('project_image')
                     ->label('Project image'),
-//                    ->defaultImageUrl(function (Project $project): string {
-//                        return storage_path($project->project_image);
-//                    }),
                 Tables\Columns\TextColumn::make('name')->searchable(),
                 Tables\Columns\TextColumn::make('git_repository'),
                 Tables\Columns\TextColumn::make('client')
