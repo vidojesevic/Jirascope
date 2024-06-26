@@ -119,7 +119,7 @@ class User extends Authenticatable implements FilamentUser, HasTenants
 
     public function canAccessPanel(Panel $panel): bool
     {
-        return str_ends_with($this->email, '@filament.rs') && $this->hasVerifiedEmail();
+        return $this->team()->exists() && $this->hasVerifiedEmail();
     }
 
     public function team(): BelongsToMany

@@ -64,7 +64,7 @@ class AdminPanelProvider extends PanelProvider
                 Authenticate::class,
             ])
             ->tenant(Team::class, slugAttribute: 'slug')
-//            ->tenantDomain('{tenant:slug}.filament.rs')
+//            ->tenantDomain('{tenant:domain}')
             ->spa() // This will fix livewire routing
             ->tenantRegistration(RegisterTeam::class)
             ->tenantProfile(EditTeamProfile::class);

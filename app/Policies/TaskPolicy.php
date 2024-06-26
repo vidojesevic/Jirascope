@@ -37,7 +37,7 @@ class TaskPolicy
      */
     public function update(User $user, Task $task): bool
     {
-        return $user->id == $task->user_id;
+        return $user->id == $task->user_id || $this->acceptAdmin($user);
     }
 
     /**
@@ -88,12 +88,19 @@ class TaskPolicy
         return $this->acceptAdminaAndManager($user);
     }
 
+    protected function acceptAdmin(User $user): bool
+    {
+        if ($user->isAdmin()) {
+            return true;
+        }
+        return false;
+    }
+
     protected function acceptAdminaAndManager(User $user): bool
     {
         if ($user->isAdmin() || $user->isManager()) {
             return true;
         }
-
         return false;
     }
 
@@ -102,7 +109,6 @@ class TaskPolicy
         if ($user->isRegularUser()) {
             return false;
         }
-
         return true;
     }
 }

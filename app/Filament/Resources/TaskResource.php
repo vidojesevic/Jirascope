@@ -71,6 +71,7 @@ class TaskResource extends Resource
         return $table
             ->columns([
                 Tables\Columns\TextColumn::make('status')
+                    ->icon('heroicon-s-clipboard-document-check')
                     ->colors([
                         'primary' => 'To do',
                         'warning' => 'In progress',
@@ -78,7 +79,7 @@ class TaskResource extends Resource
                         'success' => 'Internal testing',
                         'success' => 'Done',
                     ]),
-                Tables\Columns\TextColumn::make('project_id')
+                Tables\Columns\TextColumn::make('project.name')
                     ->label('Project')
                     ->getStateUsing(fn (Task $task) => $task->project()->pluck('name'))
                     ->searchable('name'),
@@ -91,8 +92,6 @@ class TaskResource extends Resource
                 Tables\Columns\TextColumn::make('end_date'),
             ])
             ->filters([
-                Tables\Filters\Filter::make('all')
-                    ->query(fn ($query) => $query),
                 Tables\Filters\Filter::make('my_jobs')
                     ->query(fn ($query) => $query->where('user_id', Auth::user()->id))
             ])
