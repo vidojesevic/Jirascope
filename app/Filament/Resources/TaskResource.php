@@ -4,10 +4,8 @@ namespace App\Filament\Resources;
 
 use App\Filament\Resources\TaskResource\Pages;
 use App\Filament\Resources\TaskResource\RelationManagers;
-use App\Models\Project;
 use App\Models\Task;
 use App\Models\User;
-use Filament\Facades\Filament;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
@@ -15,12 +13,16 @@ use Filament\Tables;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
+use Illuminate\Support\Facades\Auth;
+use Exception;
 
 class TaskResource extends Resource
 {
     protected static ?string $model = Task::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+
+    protected static ?string $navigationGroup = 'Work';
 
     public static function form(Form $form): Form
     {
@@ -49,29 +51,54 @@ class TaskResource extends Resource
                     ->type('date'),
                 Forms\Components\Textarea::make('description'),
                 Forms\Components\Select::make('user_id')
-                    ->relationship('user', 'name'),
+                    ->label('User')
+                    ->options(function () {
+                        $currentUser = auth()->user();
+                        $teamIds = $currentUser->team->pluck('id');
+                        return User::whereHas('team', function ($query) use ($teamIds) {
+                            $query->whereIn('teams.id', $teamIds);
+                        })->get()->pluck('name', 'id');
+                    }),
                 Forms\Components\FileUpload::make('task_image')
             ]);
     }
 
+    /**
+     * @throws Exception
+     */
     public static function table(Table $table): Table
     {
         return $table
             ->columns([
+                Tables\Columns\TextColumn::make('status')
+                    ->colors([
+                        'primary' => 'To do',
+                        'warning' => 'In progress',
+                        'info' => 'Code review',
+                        'success' => 'Internal testing',
+                        'success' => 'Done',
+                    ]),
                 Tables\Columns\TextColumn::make('project_id')
                     ->label('Project')
-                    ->getStateUsing(function (Task $task) {
-                        return $task->project()->pluck('name');
-                    }),
+                    ->getStateUsing(fn (Task $task) => $task->project()->pluck('name'))
+                    ->searchable('name'),
+                Tables\Columns\TextColumn::make('user_id')
+                    ->label('User')
+                    ->formatStateUsing(fn (Task $task) => $task->user()->pluck('name')[0]),
                 Tables\Columns\TextColumn::make('name'),
-                Tables\Columns\TextColumn::make('status'),
                 Tables\Columns\TextColumn::make('git_branch'),
+                Tables\Columns\TextColumn::make('start_date'),
+                Tables\Columns\TextColumn::make('end_date'),
             ])
             ->filters([
-                //
+                Tables\Filters\Filter::make('all')
+                    ->query(fn ($query) => $query),
+                Tables\Filters\Filter::make('my_jobs')
+                    ->query(fn ($query) => $query->where('user_id', Auth::user()->id))
             ])
             ->actions([
-                Tables\Actions\EditAction::make(),
+                Tables\Actions\EditAction::make()
+                    ->visible(fn (Task $task, User $user) => $task->user_id === $user->id),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
