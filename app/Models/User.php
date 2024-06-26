@@ -2,7 +2,6 @@
 
 namespace App\Models;
 
-// use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Filament\Models\Contracts\FilamentUser;
 use Filament\Models\Contracts\HasTenants;
 use Filament\Panel;
@@ -120,9 +119,7 @@ class User extends Authenticatable implements FilamentUser, HasTenants
 
     public function canAccessPanel(Panel $panel): bool
     {
-//        return str_ends_with($this->email, '@example.test') && $this->hasVerifiedEmail();
-        return true;
-//        && $this->isAdmin() || $this->isDeveloper() || $this->isManager();
+        return str_ends_with($this->email, '@filament.rs') && $this->hasVerifiedEmail();
     }
 
     public function team(): BelongsToMany

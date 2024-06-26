@@ -3,6 +3,10 @@
         Options -MultiViews -Indexes
     </IfModule>
 
+    <IfModule mod_headers.c>
+      Header set Referrer-Policy "strict-origin-when-cross-origin"
+    </IfModule>
+
     RewriteEngine On
 
     # Handle Authorization Header

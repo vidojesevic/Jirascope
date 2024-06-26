@@ -1,1 +1,1 @@
-<img src="{{ asset('images/logo.webp') }}" alt="lobbster logo" />
+<img src="{{ asset('images/logo.png') }}" alt="lobbster logo" />

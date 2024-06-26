@@ -86,4 +86,5 @@ return [
 
     'livewire_loading_delay' => 'default',
 
+    'base_url' => env('FILAMENT_BASE_URL', 'http://filament.rs'),
 ];
