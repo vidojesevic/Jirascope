@@ -13,7 +13,10 @@ class ProjectPolicy
      */
     public function viewAny(User $user): bool
     {
-        return true;
+        if (!$user->isRegularUser()) {
+            return true;
+        }
+        return false;
     }
 
     /**
@@ -32,7 +35,6 @@ class ProjectPolicy
         if ($user->isAdmin()) {
             return true;
         }
-
         return false;
     }
 
@@ -44,7 +46,6 @@ class ProjectPolicy
         if ($user->isAdmin()) {
             return true;
         }
-
         return false;
     }
 
