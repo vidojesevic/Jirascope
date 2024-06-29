@@ -4,58 +4,10 @@ Jirascope is a robust project management tool, designed as a Jira clone, built w
 
 ## Table of Contents
 
-- [Installation](#installation)
-- [Configuration](#configuration)
 - [Usage](#usage)
 - [Features](#features)
 - [Contributing](#contributing)
 - [License](#license)
-
-## Installation
-
-To set up Jirascope on your local machine, follow these steps:
-
-1. **Clone the repository**:
-    ```bash
-    git clone https://github.com/yourusername/jirascope.git
-    cd jirascope
-    ```
-
-2. **Install dependencies**:
-    ```bash
-    composer install
-    npm install
-    ```
-
-3. **Set up environment variables**:
-    Copy the `.env.example` file to `.env` and configure your environment variables.
-    ```bash
-    cp .env.example .env
-    ```
-
-4. **Generate application key**:
-    ```bash
-    php artisan key:generate
-    ```
-
-5. **Run migrations**:
-    ```bash
-    php artisan migrate
-    ```
-
-6. **Build frontend assets**:
-    ```bash
-    npm run dev
-    ```
-
-7. **Serve the application**:
-    ```bash
-    php artisan serve
-    ```
-
-## Configuration
-
-Ensure you configure your database and other environment-specific settings in the `.env` file.
 
 ## Usage
 
