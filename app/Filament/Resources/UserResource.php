@@ -62,8 +62,7 @@ class UserResource extends Resource
                         return $record->team()->pluck('name')->join(', ');
                     })
                     ->searchable(),
-                Tables\Columns\TextColumn::make('name')->searchable(),
-                Tables\Columns\TextColumn::make('surname')->searchable(),
+                Tables\Columns\TextColumn::make('fullname')->searchable(),
                 Tables\Columns\TextColumn::make('email')->searchable(),
                 Tables\Columns\TextColumn::make('role')
                     ->getStateUsing(function(User $record) {

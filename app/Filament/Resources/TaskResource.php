@@ -2,8 +2,11 @@
 
 namespace App\Filament\Resources;
 
+use App\Enums\Level;
+use App\Enums\Type;
 use App\Filament\Resources\TaskResource\Pages;
 use App\Filament\Resources\TaskResource\RelationManagers;
+use App\Forms\Components\Wizard;
 use App\Models\Task;
 use App\Models\User;
 use Filament\Forms;
@@ -11,8 +14,6 @@ use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\SoftDeletingScope;
 use Illuminate\Support\Facades\Auth;
 use Exception;
 
@@ -32,7 +33,10 @@ class TaskResource extends Resource
                     ->relationship('project', 'name'),
                 Forms\Components\TextInput::make('name')
                     ->required(),
-                Forms\Components\TextInput::make('git_branch'),
+                Forms\Components\Select::make('level')
+                    ->options(Level::class),
+                Forms\Components\Select::make('type')
+                    ->options(Type::class),
                 Forms\Components\Select::make('status')
                     ->default('To do')
                     ->options([
@@ -43,6 +47,11 @@ class TaskResource extends Resource
                         'Done' => 'Done'
                     ])
                     ->native(false),
+                Forms\Components\Select::make('parent_id')
+                    ->options(function (Task $task) {
+                        return $task::all()->pluck('name', 'id')->toArray();
+                    }),
+                Forms\Components\TextInput::make('git_branch'),
                 Forms\Components\TextInput::make('start_date')
                     ->required()
                     ->type('date'),
@@ -57,7 +66,7 @@ class TaskResource extends Resource
                         $teamIds = $currentUser->team->pluck('id');
                         return User::whereHas('team', function ($query) use ($teamIds) {
                             $query->whereIn('teams.id', $teamIds);
-                        })->get()->pluck('name', 'id');
+                        })->get()->pluck('full_name', 'id');
                     }),
                 Forms\Components\FileUpload::make('task_image')
             ]);
@@ -72,6 +81,7 @@ class TaskResource extends Resource
             ->columns([
                 Tables\Columns\TextColumn::make('status')
                     ->icon('heroicon-s-clipboard-document-check')
+                    ->badge()
                     ->colors([
                         'primary' => 'To do',
                         'warning' => 'In progress',
