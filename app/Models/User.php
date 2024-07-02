@@ -13,6 +13,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Collection;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 
 class User extends Authenticatable implements FilamentUser, HasTenants
 {
@@ -54,14 +55,22 @@ class User extends Authenticatable implements FilamentUser, HasTenants
         ];
     }
 
+    protected $appends = [
+        'full_name'
+    ];
+
     /**
      * Get full name of user
      *
-     * @return string
+     * @return Attribute
      */
-    public function fullName(): string
+    public function fullName(): Attribute
     {
-        return $this->name . ' ' . $this->surname;
+        return Attribute::make(
+            get: function () {
+                return $this->name . ' ' . $this->surname;
+            }
+        );
     }
 
     public function role(): BelongsTo
