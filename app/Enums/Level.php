@@ -10,7 +10,7 @@ namespace App\Enums;
 
 enum Level: string
 {
-    case High = "high";
-    case Medium = "medium";
-    case Low = "low";
+    case High = 'High';
+    case Medium = 'Medium';
+    case Low = 'Low';
 }

@@ -55,8 +55,12 @@ class User extends Authenticatable implements FilamentUser, HasTenants
         ];
     }
 
+    /**
+     * @var string[]
+     */
     protected $appends = [
-        'full_name'
+        'full_name',
+        'full_name_and_role'
     ];
 
     /**
@@ -67,9 +71,14 @@ class User extends Authenticatable implements FilamentUser, HasTenants
     public function fullName(): Attribute
     {
         return Attribute::make(
-            get: function () {
-                return $this->name . ' ' . $this->surname;
-            }
+            get: fn () => $this->name . ' ' . $this->surname
+        );
+    }
+
+    public function fullNameAndRole(): Attribute
+    {
+        return Attribute::make(
+            get: fn () => $this->full_name . ', ' . $this->role()->pluck('name')[0]
         );
     }
 
