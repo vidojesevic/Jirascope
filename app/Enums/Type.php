@@ -9,10 +9,10 @@ declare(strict_types=1);
 
 namespace App\Enums;
 
-enum Type: int
+enum Type: string
 {
-    case Task = 1;
-    case Feature = 2;
-    case Bugfix = 3;
-    case Testing = 4;
+    case Task = 'Task';
+    case Feature = 'Feature';
+    case Bugfix = 'Bugfix';
+    case Test = 'Test';
 }

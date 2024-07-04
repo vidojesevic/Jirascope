@@ -9,7 +9,14 @@ use Illuminate\Database\Eloquent\Builder;
 
 class Task extends Model
 {
+    /**
+     * @var string
+     */
     protected $table = 'tasks';
+
+    /**
+     * @var string[]
+     */
     protected $fillable = [
         'name',
         'description',
@@ -31,11 +38,17 @@ class Task extends Model
         return $this->belongsTo(Project::class);
     }
 
+    /**
+     * @return BelongsTo
+     */
     public function team(): BelongsTo
     {
         return $this->belongsTo(Team::class);
     }
 
+    /**
+     * @return BelongsTo
+     */
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);

@@ -57,7 +57,7 @@ class UserResource extends Resource
         return $table
             ->columns([
                 Tables\Columns\TextColumn::make('team')
-                    ->label('Teams')
+                    ->label('Team')
                     ->getStateUsing(function (User $record) {
                         return $record->team()->pluck('name')->join(', ');
                     })
