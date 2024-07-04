@@ -17,10 +17,11 @@ Jirascope is a robust project management tool, designed as a Jira clone, built w
     The first step is to create a team. A team will have an admin who can manage team members and clients.
 
 2. **Add Users**:
-    The team admin can add users to the team and assign them different roles such as:
-    - Junior PHP Developer
-    - Project Manager
-    - And more...
+    The team admin can add users to the team and assign them different roles under parent roles:
+    - Developer - Can modify just it's own tasks
+    - Project Manager - Can create, modify and delette tasks, view clients...
+    - Admin - No restriction
+    - User - Regular user that cannot access /app routes
 
 ### Client and Project Management
 
