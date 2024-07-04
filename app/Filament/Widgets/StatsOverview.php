@@ -23,6 +23,11 @@ class StatsOverview extends BaseWidget
     protected static bool $isLazy = true;
 
     /**
+     * @var int|null
+     */
+    protected static ?int $sort = 2;
+
+    /**
      * @return array|Stat[]
      */
     protected function getStats(): array

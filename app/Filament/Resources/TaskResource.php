@@ -39,8 +39,7 @@ class TaskResource extends Resource
                             ->required(),
                         Forms\Components\TextInput::make('git_branch')
                             ->hiddenLabel()
-                            ->placeholder('Git branch')
-                            ->prefix('https://github.com/'),
+                            ->placeholder('Git branch'),
                         Forms\Components\Select::make('project_id')
                             ->placeholder('Select the project')
                             ->hiddenLabel()
