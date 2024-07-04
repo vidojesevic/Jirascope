@@ -1,5 +1,7 @@
 # Jirascope
 
+![Alt text](public/images/logo.png)
+
 Jirascope is a robust project management tool, designed as a Jira clone, built with Laravel, Filament, Vue.js, and Inertia.js. This application facilitates seamless collaboration within teams, allowing admins to manage users, clients, projects, and tasks effectively.
 
 ## Table of Contents
