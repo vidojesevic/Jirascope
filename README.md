@@ -67,4 +67,4 @@ Jirascope is open-source software licensed under the [MIT license](LICENSE).
 
 ---
 
-Enjoy using Jirascope! For any questions or support, please contact our [support team](mailto:support@jirascope.com).
+Enjoy using Jirascope! For any questions or support, please contact our [support team](mailto:vidoje@vsevic.com).
